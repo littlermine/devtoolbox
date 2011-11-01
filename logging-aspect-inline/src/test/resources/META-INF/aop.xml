@@ -1,0 +1,12 @@
+<aspectj>
+
+    <aspects>
+
+        <!-- define a concrete aspect inline -->
+        <concrete-aspect name="org.devtoolbox.logging.aspect.LoggingAspect" extends="org.devtoolbox.logging.aspect.AbstractLoggingAspect">
+            <pointcut name="logging" expression="within(com.company.service.*) &amp;&amp; execution(* *(..)) &amp;&amp; @annotation(org.devtoolbox.logging.aspect.annotation.Loggable)"/>
+        </concrete-aspect>
+
+    </aspects>
+
+</aspectj>
