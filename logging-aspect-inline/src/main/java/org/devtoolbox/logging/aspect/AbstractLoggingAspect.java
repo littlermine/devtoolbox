@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public @Aspect abstract class AbstractLoggingAspect
 	{
-	@Pointcut
-	public abstract void logging ( );
+	public @Pointcut abstract void logging ( );
 
 	@Before ( value = "logging()", argNames = "joinPoint" )
 	public void enteringMethod ( JoinPoint joinPoint )
