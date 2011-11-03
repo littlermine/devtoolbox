@@ -1,0 +1,9 @@
+<aspectj>
+	<aspects>
+		<concrete-aspect name="org.devtoolbox.logging.aspect._LoggingAspect"
+						 extends="org.devtoolbox.logging.aspect.AbstractLoggingAspect">
+			<pointcut name="logging" expression="within(org.devtoolbox.log..*) &amp;&amp; execution(* *(..)) &amp;&amp; @annotation(org.devtoolbox.logging.aspect.annotation.Loggable)"/>
+		</concrete-aspect>
+		<weaver options="-verbose"/>
+	</aspects>
+</aspectj>
