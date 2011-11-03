@@ -1,0 +1,6 @@
+<aspectj>
+	<aspects>
+		<aspect name="org.devtoolbox.logging.aspect.LoggingAspect"/>
+		<weaver options="-verbose"/>
+	</aspects>
+</aspectj>
