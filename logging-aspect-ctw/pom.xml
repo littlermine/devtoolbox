@@ -69,19 +69,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
-			<!-- Maven Test Plugin -->
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.10</version>
-				<configuration>
-					<argLine>-javaagent:"${settings.localRepository}"/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar</argLine>
-					<useSystemClassLoader>true</useSystemClassLoader>
-					<forkMode>always</forkMode>
-				</configuration>
-			</plugin>-->
-			
+
 			<!-- Maven AspectJ Plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
