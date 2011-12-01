@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="org.devtoolbox.errorhandling" />
+
+	<context:property-placeholder location="classpath:error.properties"/>
+	<util:properties id="errorProperties" location="classpath:error.properties" />
+
+	<camel:endpoint id="testFile" uri="file://${folder.root}?fileName=OnErrorFileMoverTest.txt" />
+	<camel:endpoint id="processingFolder" uri="file://${folder.root}/${folder.processing}" />
+
+	<camel:camelContext errorHandlerRef="errorHandlerPrototype">
+		<camel:routeContextRef ref="failure-test-routes" />
+		<camel:routeContextRef ref="failure-routes" />
+	</camel:camelContext>
+
+	<camel:routeContext id="failure-test-routes">
+
+		<camel:route>
+			<camel:from ref="testFile" />
+			<camel:to ref="processingFolder"/>
+			<camel:setProperty propertyName="originalFileName">
+				<camel:simple>${header.CamelFileName}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="rootFolderPath">
+				<camel:spel>#{@errorProperties['folder.root']}</camel:spel>
+			</camel:setProperty>
+			<camel:setProperty propertyName="processingFolderPath">
+				<camel:spel>#{@errorProperties['folder.processing']}</camel:spel>
+			</camel:setProperty>
+			<camel:setProperty propertyName="errorFolderPath">
+				<camel:spel>#{@errorProperties['folder.error']}</camel:spel>
+			</camel:setProperty>
+			<camel:bean ref="produceError" />
+		</camel:route>
+
+	</camel:routeContext>
+
+	<bean id="errorHandlerPrototype" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+		<property name="deadLetterUri" value="direct:onError" />
+		<property name="redeliveryPolicy" ref="redeliveryPolicy" />
+	</bean>
+	
+	<bean id="redeliveryPolicy" class="org.apache.camel.processor.RedeliveryPolicy">
+		<property name="maximumRedeliveries" value="0" />
+		<property name="redeliveryDelay" value="0" />
+	</bean>
+
+	<bean id="produceError" class="org.devtoolbox.errorhandling.ThrowExceptionBean" />
+	
+</beans>
