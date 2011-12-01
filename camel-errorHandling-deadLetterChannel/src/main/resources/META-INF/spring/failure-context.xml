@@ -1,0 +1,27 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:camel="http://camel.apache.org/schema/spring"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <camel:endpoint id="freemarkerErrorEmailEndpoint" uri="freemarker:${notification.error.template.folder}/RouteFailureTemplate.ftl"/>
+    <camel:endpoint id="onErrorMailSend"
+        uri="smtp://${notification.error.smtp.host}:${notification.error.smtp.port}?to=${notification.error.smtp.to}&amp;from=${notification.error.smtp.from}&amp;CC=${notification.error.smtp.cc}&amp;contentType=text/html"/>    
+
+    <camel:routeContext id="failure-routes">
+
+        <camel:route>
+            <camel:from uri="direct:onError"/>
+            <camel:to uri="onErrorFileMover"/>
+            <camel:to ref="freemarkerErrorEmailEndpoint" />
+            <camel:to ref="onErrorMailSend" />
+        </camel:route>
+
+    </camel:routeContext>
+    
+</beans>

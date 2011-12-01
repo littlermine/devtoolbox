@@ -1,0 +1,1 @@
+The processing of the file ${exchange.properties.originalFileName} has failed. The file was moved to the ${exchange.properties.rootFolderPath}/${exchange.properties.errorFolderPath} folder.
