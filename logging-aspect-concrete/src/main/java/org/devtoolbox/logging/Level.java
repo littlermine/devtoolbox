@@ -17,7 +17,7 @@ package org.devtoolbox.logging;
 
 
 /**
- * @author  Janis Kazakovs <janis.kazakovs@opatopa.com>
+ * @author Janis Kazakovs <janis.kazakovs@opatopa.com>
  * 
  */
 public enum Level {
