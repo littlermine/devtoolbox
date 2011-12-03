@@ -159,7 +159,14 @@ public @Aspect class LoggingAspect
 			for ( int i = 0; i < aMethodParameters.length; i++ )
 				{
 				Object methodParameter = aMethodParameters [ i ];
-				aStringBuilder.append ( methodParameter.getClass().getSimpleName() ).append ( "[" ).append ( methodParameter ).append ( "]");
+				if ( null != methodParameter ) 
+					{
+					aStringBuilder.append ( methodParameter.getClass().getSimpleName() ).append ( "[" ).append ( methodParameter ).append ( "]");
+					}
+				else 
+					{
+					aStringBuilder.append ( methodParameter );
+					}
 				if ( aMethodParameters.length != ( i + 1 ) )
 					{
 					aStringBuilder.append ( "," );

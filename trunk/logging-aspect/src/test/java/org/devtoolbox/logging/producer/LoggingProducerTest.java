@@ -70,7 +70,7 @@ public class LoggingProducerTest
 		final String testProperty = "WARN";
 		new Expectations ( )
 			{{
-			loggingPropertiesMock.getProperty ( "logging.level" ); result = testProperty;
+			loggingPropertiesMock.getProperty ( "logging.level.min" ); result = testProperty;
 			}};
 		
 		//EXECUTE
@@ -86,7 +86,7 @@ public class LoggingProducerTest
 		final String testProperty = null;
 		new Expectations ( )
 			{{
-			loggingPropertiesMock.getProperty ( "logging.level" ); result = testProperty;
+			loggingPropertiesMock.getProperty ( "logging.level.min" ); result = testProperty;
 			}};
 		
 		//EXECUTE
