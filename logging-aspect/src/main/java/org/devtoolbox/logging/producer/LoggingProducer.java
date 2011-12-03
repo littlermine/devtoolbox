@@ -87,7 +87,7 @@ final class LoggingProducer
 		{
 		Level result = Level.DEBUG;
 		
-		String indentProperty = loggingProperties.getProperty ( "logging.level" );
+		String indentProperty = loggingProperties.getProperty ( "logging.level.min" );
 		if ( StringUtils.isNotEmpty ( indentProperty ) )
 			{
 			result = Level.valueOf ( indentProperty );
