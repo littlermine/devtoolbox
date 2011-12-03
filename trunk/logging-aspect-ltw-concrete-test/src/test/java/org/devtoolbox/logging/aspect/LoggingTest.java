@@ -28,20 +28,14 @@ public class LoggingTest
 	{
 	public @Test void testLogAspect ( )
 		{
-//		Weld weld = new Weld ( );
-//		WeldContainer container = weld.initialize ( );
-//		LoggableClass loggableClass = container.instance ( ).select ( LoggableClass.class ).get ( );
 		LoggableClass loggableClass = new LoggableClass ( );
 		loggableClass.log ( );
 		}
 	
-/*	@Test ( expectedExceptions = UnsupportedOperationException.class )
+	@Test ( expectedExceptions = UnsupportedOperationException.class )
 	public void testLogAspectException ( )
 		{
-//		Weld weld = new Weld ( );
-//		WeldContainer container = weld.initialize ( );
-//		LoggableClass loggableClass = container.instance ( ).select ( LoggableClass.class ).get ( );
 		LoggableClass loggableClass = new LoggableClass ( );
-		loggableClass.logException ( );
-		}*/
+		loggableClass.logException(null, 0);
+		}
 	}
