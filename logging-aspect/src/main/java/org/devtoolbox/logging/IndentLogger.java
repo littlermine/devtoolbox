@@ -180,27 +180,27 @@ public final class IndentLogger implements Logger
 
 	@Override public void info ( String msg )
 		{
-		throw new UnsupportedOperationException ( );
+		logger.info ( LogIndent.INSTANCE.indent ( ) + msg );
 		}
 
 	@Override public void info ( String format, Object arg )
 		{
-		throw new UnsupportedOperationException ( );
+		logger.info ( LogIndent.INSTANCE.indent ( ) + format, arg );
 		}
 
 	@Override public void info ( String format, Object arg1, Object arg2 )
 		{
-		throw new UnsupportedOperationException ( );
+		logger.info ( LogIndent.INSTANCE.indent ( ) + format, arg1, arg2 );
 		}
 
 	@Override public void info ( String format, Object[ ] argArray )
 		{
-		throw new UnsupportedOperationException ( );
+		logger.info ( LogIndent.INSTANCE.indent ( ) + format, argArray );
 		}
 
 	@Override public void info ( String msg, Throwable t )
 		{
-		throw new UnsupportedOperationException ( );
+		logger.info ( LogIndent.INSTANCE.indent ( ) + msg, t );
 		}
 
 	@Override public boolean isInfoEnabled ( Marker marker )
