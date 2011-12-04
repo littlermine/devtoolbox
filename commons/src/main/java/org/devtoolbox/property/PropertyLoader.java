@@ -59,7 +59,7 @@ public abstract class PropertyLoader
 		 */
 		public Builder load ( String aPropertyFileName )
 			{
-			final ClassLoader loader = ClassLoader.getSystemClassLoader ( );
+			final ClassLoader loader = Thread.currentThread ( ).getContextClassLoader ( );
 			
 			Validate.notEmpty ( aPropertyFileName, "Specified property file name is either null or empty." );
 
@@ -77,10 +77,14 @@ public abstract class PropertyLoader
 					{
 					properties.load ( in ); // Can throw IOException
 					}
+				else
+					{
+					logger.warn ( "Was not able to load properties from the \"{}\" property file. Reason: resource not found." );
+					}
 				}
 			catch ( IOException e )
 				{
-				logger.debug ( "Was not able to load properties from the \"{}\" property file. Reason: {}", aPropertyFileName, e.getMessage ( ) );
+				logger.warn ( "Was not able to load properties from the \"{}\" property file. Reason: {}", aPropertyFileName, e.getMessage ( ) );
 				
 				properties = null;
 				}
@@ -94,7 +98,7 @@ public abstract class PropertyLoader
 						}
 					catch ( Throwable t )
 						{
-						logger.debug ( "Was not able to close \"{}\" file InputStream. Reason: {}", aPropertyFileName, t.getMessage ( ) );
+						logger.warn ( "Was not able to close \"{}\" file InputStream. Reason: {}", aPropertyFileName, t.getMessage ( ) );
 						}
 					}
 				}
