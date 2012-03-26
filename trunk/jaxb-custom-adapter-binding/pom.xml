@@ -65,7 +65,6 @@
                 </executions>
                 <configuration>
                     <schemaDirectory>${basedir}/src/test/resources/schema</schemaDirectory>
-                    <!-- generateDirectory>${basedir}/src/main/java</generateDirectory-->
                     <generatePackage>org.devtoolbox</generatePackage>
                     <includeSchemas>
                         <includeSchema>**/*.xsd</includeSchema>
