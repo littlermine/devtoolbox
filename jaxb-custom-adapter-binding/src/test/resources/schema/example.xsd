@@ -2,7 +2,7 @@
     <s:element name="getValue">
         <s:complexType>
             <s:sequence>
-                <s:element name="date" type="s:time"/>
+                <s:element name="date" type="s:dateTime"/>
             </s:sequence>
         </s:complexType>
     </s:element>
