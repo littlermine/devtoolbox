@@ -1,0 +1,9 @@
+<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema">
+    <s:element name="getValue">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="date" type="s:time"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+</s:schema>
