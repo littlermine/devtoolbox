@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets" 
+    template="WEB-INF/template/paper-template.xhtml">
+
+    <ui:define name="title">Paper Add</ui:define>
+    <ui:define name="head">Paper Add</ui:define>
+    <ui:define name="content">
+        <h:form>
+            <p>
+                <h:outputLabel for="size" value="size: "/>
+                <h:inputText id="name" value="#{paperBean.size}"/>
+                <br/>
+                <h:outputLabel for="text" value="text: "/>
+                <h:inputText id="text" value="#{paperBean.text}"/>
+                <br/><br/>
+                <h:commandButton action="#{paperBean.add}" value="add"/>
+            </p>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
