@@ -1,0 +1,38 @@
+package org.devtoolbox.model;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.jboss.seam.security.annotations.management.IdentityProperty;
+import org.jboss.seam.security.annotations.management.PropertyType;
+
+public @Entity class IdentityObjectCredentialType implements Serializable
+	{
+	@Id @GeneratedValue public Long id;
+	@IdentityProperty ( PropertyType.NAME ) public String name;
+
+	public Long getId ( )
+		{
+		return id;
+		}
+
+	public void setId ( Long id )
+		{
+		this.id = id;
+		}
+
+	public String getName ( )
+		{
+		return name;
+		}
+
+	public void setName ( String name )
+		{
+		this.name = name;
+		}
+
+	private static final long serialVersionUID = 2163551052090645773L;
+	}
