@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:si="http://www.springframework.org/schema/integration"
+    xmlns:si-xml="http://www.springframework.org/schema/integration/xml"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+        http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+        http://www.springframework.org/schema/integration/xml
+        http://www.springframework.org/schema/integration/xml/spring-integration-xml-2.0.xsd">
+
+    <si:channel id="passengerChannel"/>
+    <si:channel id="infantChannel"/>
+    <si:channel id="childChannel"/>
+    <si:channel id="adultChannel"/>
+
+    <si:chain input-channel="passengerChannel">
+        <si-xml:xpath-header-enricher>
+            <si-xml:header name="passengerAge" evaluation-type="NUMBER_RESULT" xpath-expression="/passenger/age"/>
+        </si-xml:xpath-header-enricher>
+        <si:recipient-list-router>
+            <si:recipient channel="infantChannel" selector-expression="headers['passengerAge'] le 1"/>
+            <si:recipient channel="childChannel" selector-expression="headers['passengerAge'] gt 1 and headers['passengerAge'] le 12"/>
+            <si:recipient channel="adultChannel" selector-expression="headers['passengerAge'] gt 12"/>
+        </si:recipient-list-router>
+    </si:chain>
+    
+    <si-xml:xpath-transformer input-channel="infantChannel" output-channel="logger" xpath-expression="/passenger/name" />
+    <si-xml:xpath-transformer input-channel="childChannel" output-channel="logger" xpath-expression="/passenger/name" />
+    <si-xml:xpath-transformer input-channel="adultChannel" output-channel="logger" xpath-expression="/passenger/name" />
+    
+    <si:logging-channel-adapter id="logger" level="INFO"/>
+
+</beans>
