@@ -6,38 +6,38 @@
         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-        <route id="passengerRoute">
-            <from uri="file:src/test/resources/message?noop=true"/>
-            <choice>
-                <when>
-                    <xpath>/passenger/age &lt;= '1'</xpath>
-                    <transform>
-                        <xpath>/passenger/name/text()</xpath>
-                    </transform>
-                    <log message="${body}" loggingLevel="INFO"/>
-                </when>
-                <when>
-                    <xpath>/passenger/age &gt; '1' and /passenger/age &lt;= '12'</xpath>
-                    <transform>
-                        <xpath>/passenger/name/text()</xpath>
-                    </transform>
-                    <log message="${body}" loggingLevel="INFO"/>
-                </when>
-                <when>
-                    <xpath>/passenger/age &gt; '12'</xpath>
-                    <transform>
-                        <xpath>/passenger/name/text()</xpath>
-                    </transform>
-                    <log message="${body}" loggingLevel="INFO"/>
-                </when>
-                <otherwise>
-                    <transform>
-                        <xpath>/passenger/name/text()</xpath>
-                    </transform>
-                    <log message="${body}" loggingLevel="INFO"/>
-                </otherwise>
-            </choice>
-        </route>
+<route id="passengerRoute">
+    <from uri="file:src/test/resources/message?noop=true"/>
+    <choice>
+        <when>
+            <xpath>/passenger/age &lt;= '1'</xpath>
+            <transform>
+                <xpath>/passenger/name/text()</xpath>
+            </transform>
+            <log message="${body}" loggingLevel="INFO"/>
+        </when>
+        <when>
+            <xpath>/passenger/age &gt; '1' and /passenger/age &lt;= '12'</xpath>
+            <transform>
+                <xpath>/passenger/name/text()</xpath>
+            </transform>
+            <log message="${body}" loggingLevel="INFO"/>
+        </when>
+        <when>
+            <xpath>/passenger/age &gt; '12'</xpath>
+            <transform>
+                <xpath>/passenger/name/text()</xpath>
+            </transform>
+            <log message="${body}" loggingLevel="INFO"/>
+        </when>
+        <otherwise>
+            <transform>
+                <xpath>/passenger/name/text()</xpath>
+            </transform>
+            <log message="${body}" loggingLevel="INFO"/>
+        </otherwise>
+    </choice>
+</route>
     </camelContext>
 
 </beans>
