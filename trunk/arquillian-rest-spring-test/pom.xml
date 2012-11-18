@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.devtoolbox</groupId>
+  <artifactId>arquillian-rest-spring-test</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+
+  <!-- Properties -->
+  <properties>
+    <version.spring.framework>3.1.1.RELEASE</version.spring.framework>
+    <version.arquillian.spring>1.0.0.Beta1</version.arquillian.spring>
+    <version.org.apache.tomcat>6.0.32</version.org.apache.tomcat>
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.7</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${version.spring.framework}</version>
+    </dependency>
+
+    <!-- org.apache.tomcat -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>catalina</artifactId>
+      <version>${version.org.apache.tomcat}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>coyote</artifactId>
+      <version>${version.org.apache.tomcat}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Arquillian -->
+    <dependency>
+      <groupId>org.jboss.arquillian.extension</groupId>
+      <artifactId>arquillian-service-integration-spring-inject</artifactId>
+      <version>${version.arquillian.spring}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.container</groupId>
+      <artifactId>arquillian-container-spi</artifactId>
+      <version>1.0.0.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.container</groupId>
+      <artifactId>arquillian-tomcat-embedded-6</artifactId>
+      <version>1.0.0.CR3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit</groupId>
+      <artifactId>arquillian-junit-container</artifactId>
+      <version>1.0.0.Final</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JAX-RS -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+    </dependency>
+
+  </dependencies>
+
+
+</project>
