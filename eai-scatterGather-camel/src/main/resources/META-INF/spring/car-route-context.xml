@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <route id="carRoute">
+            <from uri="direct:start"/>
+            <multicast parallelProcessing="true">
+                <to uri="seda:wheelRoute"/>
+                <to uri="seda:suspensionRoute"/>
+                <to uri="seda:seatRoute"/>
+            </multicast>
+        </route>
+
+        <route>
+            <from uri="seda:wheelRoute"/>
+            <log message="WHEEL ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <setBody>
+                <constant>wheelResult</constant>
+            </setBody>
+            <log message="WHEEL ROUTE: OUT: ${body}" loggingLevel="INFO"/>
+            <to uri="mock:wheelResult"/>
+            <to uri="seda:carAggregator"/>
+        </route>
+
+        <route>
+            <from uri="seda:suspensionRoute"/>
+            <log message="SUSPENSION ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <setBody>
+                <constant>suspensionResult</constant>
+            </setBody>
+            <log message="SUSPENSION ROUTE: OUT: ${body}" loggingLevel="INFO"/>
+            <to uri="mock:suspensionResult"/>
+            <to uri="seda:carAggregator"/>
+        </route>
+
+        <route>
+            <from uri="seda:seatRoute"/>
+            <log message="SEAT ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <setBody>
+                <constant>seatResult</constant>
+            </setBody>
+            <log message="SEAT ROUTE: OUT: ${body}" loggingLevel="INFO"/>
+            <to uri="mock:seatResult"/>
+            <to uri="seda:carAggregator"/>
+        </route>
+
+        <route>
+            <from uri="seda:carAggregator"/>
+            <aggregate strategyRef="carAggregationStrategy" completionTimeout="1000">
+                <correlationExpression>
+                    <header>carMessageCorrelationId</header>
+                </correlationExpression>
+                <to uri="bean:callbackBean?method=proessResult(${body})"/>
+                <setBody>
+                    <spel>#{@callbackBean.result}</spel>
+                </setBody>
+                <log message="CALLBACK RESULT: ${body}" loggingLevel="INFO"/>
+                <to uri="mock:result"/>
+            </aggregate>
+        </route>
+
+    </camelContext>
+
+</beans>
