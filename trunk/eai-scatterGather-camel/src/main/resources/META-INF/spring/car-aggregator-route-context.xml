@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <routeContext id="car-aggregator-context" xmlns="http://camel.apache.org/schema/spring">
+
+        <route id="aggregatorRoute">
+            <from uri="seda:carAggregator"/>
+            <aggregate strategyRef="carAggregationStrategy" completionTimeout="1000">
+                <correlationExpression>
+                    <header>carMessageCorrelationId</header>
+                </correlationExpression>
+                <to uri="bean:callbackBean?method=proessResult(${body})"/>
+                <setBody>
+                    <spel>#{@callbackBean.result}</spel>
+                </setBody>
+                <log message="CALLBACK RESULT: ${body}" loggingLevel="INFO"/>
+                <to uri="mock:result"/>
+            </aggregate>
+        </route>
+
+    </routeContext>
+
+</beans>

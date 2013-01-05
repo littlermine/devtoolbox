@@ -5,7 +5,12 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+    <import resource="car-aggregator-route-context.xml"/>
+
+    <camelContext id="car-main-context" xmlns="http://camel.apache.org/schema/spring">
+
+        <routeContextRef ref="car-aggregator-context"/>
+
         <route id="carRoute">
             <from uri="direct:start"/>
             <multicast parallelProcessing="true">
@@ -15,7 +20,7 @@
             </multicast>
         </route>
 
-        <route>
+        <route id="wheelRoute">
             <from uri="seda:wheelRoute"/>
             <log message="WHEEL ROUTE: IN: ${body}" loggingLevel="INFO"/>
             <setBody>
@@ -26,7 +31,7 @@
             <to uri="seda:carAggregator"/>
         </route>
 
-        <route>
+        <route id="suspensionRoute">
             <from uri="seda:suspensionRoute"/>
             <log message="SUSPENSION ROUTE: IN: ${body}" loggingLevel="INFO"/>
             <setBody>
@@ -37,7 +42,7 @@
             <to uri="seda:carAggregator"/>
         </route>
 
-        <route>
+        <route id="seatRoute">
             <from uri="seda:seatRoute"/>
             <log message="SEAT ROUTE: IN: ${body}" loggingLevel="INFO"/>
             <setBody>
@@ -46,21 +51,6 @@
             <log message="SEAT ROUTE: OUT: ${body}" loggingLevel="INFO"/>
             <to uri="mock:seatResult"/>
             <to uri="seda:carAggregator"/>
-        </route>
-
-        <route>
-            <from uri="seda:carAggregator"/>
-            <aggregate strategyRef="carAggregationStrategy" completionTimeout="1000">
-                <correlationExpression>
-                    <header>carMessageCorrelationId</header>
-                </correlationExpression>
-                <to uri="bean:callbackBean?method=proessResult(${body})"/>
-                <setBody>
-                    <spel>#{@callbackBean.result}</spel>
-                </setBody>
-                <log message="CALLBACK RESULT: ${body}" loggingLevel="INFO"/>
-                <to uri="mock:result"/>
-            </aggregate>
         </route>
 
     </camelContext>
