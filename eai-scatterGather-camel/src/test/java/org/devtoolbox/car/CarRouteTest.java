@@ -16,12 +16,8 @@
 package org.devtoolbox.car;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Resource;
-
-import junit.framework.Assert;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
