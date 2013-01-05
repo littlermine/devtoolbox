@@ -88,10 +88,7 @@ public class CarRouteTest
 		suspensionResultEndpoint.expectedBodiesReceived("suspensionResult");
 		seatResultEndpoint.expectedBodiesReceived("seatResult");
 		resultEndpoint.expectedBodiesReceived("wheelResult+seatResult+suspensionResult");
-		
-		Map<String, Object> headers = new HashMap<String, Object>();
-		headers.put("car", "car");
-		
+
 		//EXECUTE
 		template.sendBodyAndHeader("BODY", "carMessageCorrelationId", "carMessageCorrelationId");
 		
