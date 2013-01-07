@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.devtoolbox.car.aggregator;
-
-import org.apache.camel.Exchange;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
-import org.springframework.stereotype.Component;
+package org.devtoolbox.suspension.request;
 
 /**
  * @author J. Kazakovs
  *
  */
-@Component("carAggregationStrategy")
-public class CarAggregationStrategy implements AggregationStrategy
+public class SuspensionRequest
 	{
-	public Exchange aggregate(Exchange oldExchange, Exchange newExchange)
-		{
-		// the first time we only have the new exchange
-		if (oldExchange == null)
-			{
-			return newExchange;
-			}
+	private String material;
 
-		Object bodyNew = newExchange.getIn().getBody();
-		Object bodyOld = oldExchange.getIn().getBody();
-		
-		newExchange.getIn().setBody(bodyOld + "+" + bodyNew);
-		
-		return newExchange;
+	public String getMaterial()
+		{
+		return material;
+		}
+
+	public void setMaterial(String material)
+		{
+		this.material = material;
 		}
 	}

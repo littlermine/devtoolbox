@@ -16,16 +16,28 @@
 package org.devtoolbox.car;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.annotation.Resource;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.Service;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.devtoolbox.car.callback.CallbackBean;
-import org.devtoolbox.seat.domain.Seat;
-import org.devtoolbox.seat.resource.SeatResource;
+import org.devtoolbox.car.request.Car;
+import org.devtoolbox.suspension.SuspensionClient;
+import org.devtoolbox.suspension.resource.SuspensionResource;
+import org.devtoolbox.suspension.response.Material;
+import org.devtoolbox.suspension.response.Suspension;
+import org.devtoolbox.suspension.response.SuspensionResponse;
+import org.devtoolbox.wheel.request.WheelRequest;
+import org.devtoolbox.wheel.response.WheelResponse;
+import org.devtoolbox.wheel.service.WheelService;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -35,6 +47,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -61,32 +75,50 @@ public class CarRouteTest
 	@Resource
 	private CallbackBean callBackbean;
 	
+	@Resource 
+	private SuspensionClient seatClient;
+
 	@Deployment(testable = false) 
 	@OverProtocol("Servlet 2.5") 
 	public static WebArchive create()
 		{
 		return ShrinkWrap
-				.create(WebArchive.class, "spring-rest-test.war")
-				.addClasses(Seat.class, SeatResource.class)
-				.addAsLibraries(resolveArtifact(
+				.create(WebArchive.class, "suspension-rest-test.war")
+				.addClasses(SuspensionResource.class, SuspensionResponse.class, Suspension.class, Material.class)
+				.addClasses(WheelService.class, WheelRequest.class, WheelResponse.class)
+ 				.addAsLibraries(resolveArtifact(
 						"org.springframework:spring-webmvc",
 		                "org.codehaus.jackson:jackson-mapper-asl"))
-				.addAsWebInfResource("org/devtoolbox/seat/resource/seatResource-web.xml", "web.xml")
-				.addAsWebInfResource("org/devtoolbox/seat/resource/seatResource-servlet.xml", "rest-train-servlet.xml")
-				.addAsWebInfResource("org/devtoolbox/seat/resource/seatResource-applicationContext.xml", "applicationContext.xml");
+				.addAsWebInfResource("org/devtoolbox/suspension/resource/suspensionResource-web.xml", "web.xml")
+				.addAsWebInfResource("org/devtoolbox/suspension/resource/suspensionResource-servlet.xml", "suspension-rest-servlet.xml")
+				.addAsWebInfResource("org/devtoolbox/suspension/resource/suspensionResource-applicationContext.xml", "applicationContext.xml");
 		}
 	
-	@Test @RunAsClient @DirtiesContext
+	@Test @RunAsClient @DirtiesContext 
 	public void shouldBeAbleToListAllCustomers() throws InterruptedException
 		{
+		Endpoint endpoint = Endpoint.publish("http://localhost:8080/wheelService", new WheelService());
+		
+		Thread.sleep(2000);
+		
 		//PREPARE
-		wheelResultEndpoint.expectedBodiesReceived("wheelResult");
-		suspensionResultEndpoint.expectedBodiesReceived("suspensionResult");
-		seatResultEndpoint.expectedBodiesReceived("seatResult");
-		resultEndpoint.expectedBodiesReceived("wheelResult+seatResult+suspensionResult");
+		wheelResultEndpoint.expectedBodiesReceived("9");
+		suspensionResultEndpoint.expectedBodiesReceived("steel");
+		seatResultEndpoint.expectedBodiesReceived("hight");
+		resultEndpoint.expectedBodiesReceived("hight+9+steel");
+		
+		Car testCarRequest = new Car();
+		testCarRequest.setSeat("hight");
+		testCarRequest.setSuspension("gold");
+		testCarRequest.setWheel("square");
 
 		//EXECUTE
-		template.sendBodyAndHeader("BODY", "carMessageCorrelationId", "carMessageCorrelationId");
+		template.sendBodyAndHeader(testCarRequest, "carMessageCorrelationId", "carMessageCorrelationId");
+		
+		
+		Thread.sleep(1000);
+		
+		endpoint.stop();
 		
 		//VERIFY
 		wheelResultEndpoint.assertIsSatisfied();

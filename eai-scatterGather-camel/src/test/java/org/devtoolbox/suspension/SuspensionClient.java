@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.devtoolbox.seat;
+package org.devtoolbox.suspension;
 
-import org.devtoolbox.seat.domain.Seat;
+import org.devtoolbox.suspension.response.SuspensionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,18 +25,17 @@ import org.springframework.web.client.RestTemplate;
  * @author J. Kazakovs
  * 
  */
-@Component public class SeatClient
+@Component public class SuspensionClient
 	{
 	@Autowired private RestTemplate restTemplate;
 	@Value("${url}") private String url;
 
-	public String retrieveSeatStatus()
+	public SuspensionResponse retrieveSeatStatus()
 		{
-		String result = null;
+		SuspensionResponse result = null;
 
-		String resourceUrl = url + "/seat";
-		Seat seat = restTemplate.getForObject(resourceUrl, Seat.class);
-		result = seat.getStatus();
+		String resourceUrl = url + "/suspension/silver";
+		result = restTemplate.getForObject(resourceUrl, SuspensionResponse.class);
 
 		return result;
 		}

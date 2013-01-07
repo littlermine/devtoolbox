@@ -9,7 +9,7 @@
 
         <route id="aggregatorRoute">
             <from uri="seda:carAggregator"/>
-            <aggregate strategyRef="carAggregationStrategy" completionTimeout="1000">
+            <aggregate strategyRef="carAggregationStrategy" completionTimeout="5000">
                 <correlationExpression>
                     <header>carMessageCorrelationId</header>
                 </correlationExpression>

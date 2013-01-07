@@ -1,0 +1,17 @@
+<xs:schema xmlns:tns="http://org.devtoolbox.wheel.service"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://org.devtoolbox.wheel.service" version="1.0">
+    <xs:element name="wheelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="type" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="wheelResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="quantity" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

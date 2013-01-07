@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 step@ <jk@stepat.nl>.
+ * Copyright 2013 step@ <jk@stepat.nl>.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.devtoolbox.seat.resource;
-
-import org.devtoolbox.seat.domain.Seat;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+package org.devtoolbox.suspension.response;
 
 /**
  * @author J. Kazakovs
- *
+ * 
  */
-@Controller
-public class SeatResource
+public class SuspensionResponse
 	{
-	@RequestMapping(value="/seat", method=RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public Seat retrieveSeat()
+	private Suspension suspension;
+
+	public Suspension getSuspension()
 		{
-		Seat result = new Seat();
-		result.setStatus("OK");
-		return result;
+		return suspension;
+		}
+
+	public void setSuspension(Suspension suspension)
+		{
+		this.suspension = suspension;
+		}
+
+	@Override public String toString()
+		{
+		return "SuspensionResponse [suspension=" + suspension + "]";
 		}
 	}
