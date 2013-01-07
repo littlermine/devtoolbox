@@ -17,7 +17,6 @@
                 <setBody>
                     <spel>#{@callbackBean.result}</spel>
                 </setBody>
-                <log message="CALLBACK RESULT: ${body}" loggingLevel="INFO"/>
                 <to uri="mock:result"/>
             </aggregate>
         </route>

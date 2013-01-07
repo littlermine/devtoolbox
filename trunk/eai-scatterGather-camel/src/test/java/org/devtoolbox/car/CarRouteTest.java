@@ -16,13 +16,9 @@
 package org.devtoolbox.car;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.annotation.Resource;
-import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
-import javax.xml.ws.Service;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
@@ -47,8 +43,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -78,6 +74,8 @@ public class CarRouteTest
 	@Resource 
 	private SuspensionClient seatClient;
 
+	private Endpoint wheelEndpoint;
+	
 	@Deployment(testable = false) 
 	@OverProtocol("Servlet 2.5") 
 	public static WebArchive create()
@@ -94,13 +92,19 @@ public class CarRouteTest
 				.addAsWebInfResource("org/devtoolbox/suspension/resource/suspensionResource-applicationContext.xml", "applicationContext.xml");
 		}
 	
+	@Before public void setUp()
+		{
+		wheelEndpoint = Endpoint.publish("http://localhost:8080/wheelService", new WheelService());
+		}
+	
+	@After public void tearDown()
+		{
+		wheelEndpoint.stop();
+		}
+
 	@Test @RunAsClient @DirtiesContext 
 	public void shouldBeAbleToListAllCustomers() throws InterruptedException
 		{
-		Endpoint endpoint = Endpoint.publish("http://localhost:8080/wheelService", new WheelService());
-		
-		Thread.sleep(2000);
-		
 		//PREPARE
 		wheelResultEndpoint.expectedBodiesReceived("9");
 		suspensionResultEndpoint.expectedBodiesReceived("steel");
@@ -114,12 +118,7 @@ public class CarRouteTest
 
 		//EXECUTE
 		template.sendBodyAndHeader(testCarRequest, "carMessageCorrelationId", "carMessageCorrelationId");
-		
-		
-		Thread.sleep(1000);
-		
-		endpoint.stop();
-		
+
 		//VERIFY
 		wheelResultEndpoint.assertIsSatisfied();
 		suspensionResultEndpoint.assertIsSatisfied();
