@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:broker="http://activemq.apache.org/schema/core"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
 
     <import resource="car-aggregator-route-context.xml"/>
 
+   
+    <import resource="broker-context.xml"/> 
+    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent" >
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="vm://testBroker?create=false&amp;waitForStart=1000" />
+                <property name="userName" value="DEFAULT_VALUE"/>
+                <property name="password" value="DEFAULT_VALUE"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--<bean id="jmsConnectionFactory" 
+        class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+    
+    <bean id="pooledConnectionFactory" 
+        class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+        <property name="maxConnections" value="8" />
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+    </bean>
+    
+    <bean id="jmsConfig" 
+        class="org.apache.camel.component.jms.JmsConfiguration">
+        <property name="connectionFactory" ref="pooledConnectionFactory"/>
+        <property name="concurrentConsumers" value="10"/>
+    </bean>
+    
+    <bean id="activemq" 
+        class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="configuration" ref="jmsConfig"/>
+    </bean>-->
+
     <camelContext id="car-main-context" xmlns="http://camel.apache.org/schema/spring">
 
+        <!-- Referces -->
         <routeContextRef ref="car-aggregator-context"/>
+        
+        <!-- Endpoints -->
+        <endpoint id="wheelRequestTransformEndpoint" uri="xslt:transform/wheel-transform.xslt"/>
 
+        <!-- Data Formats -->
+        <dataFormats>
+            <xmljson id="xmlJsonDataFormat"/>
+        </dataFormats>
+
+        <!-- Routes -->
         <route id="carRoute">
             <from uri="direct:start"/>
+            <unmarshal>
+                <jaxb prettyPrint="true" contextPath="org.devtoolbox.car.request"/>
+            </unmarshal>
+            <log message="CAR REQUEST: ${body}" loggingLevel="INFO"/>
             <multicast parallelProcessing="true">
                 <to uri="seda:wheelRoute"/>
                 <to uri="seda:suspensionRoute"/>
@@ -23,8 +74,12 @@
         <route id="wheelRoute">
             <from uri="seda:wheelRoute"/>
             <log message="WHEEL ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <to ref="wheelRequestTransformEndpoint"/>
+            <log message="WHEEL ROUTE: XSLT: ${body}" loggingLevel="INFO"/>
+            <to uri="spring-ws:http://localhost:8080/wheelService"/>
+            <log message="WHEEL ROUTE: WS RESPONSE: ${body}" loggingLevel="INFO"/>
             <setBody>
-                <constant>wheelResult</constant>
+                <xpath resultType="java.lang.String">/</xpath>
             </setBody>
             <log message="WHEEL ROUTE: OUT: ${body}" loggingLevel="INFO"/>
             <to uri="mock:wheelResult"/>
@@ -34,8 +89,17 @@
         <route id="suspensionRoute">
             <from uri="seda:suspensionRoute"/>
             <log message="SUSPENSION ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <setHeader headerName="suspensionMaterial">
+                <xpath resultType="java.lang.String">/car/suspension</xpath>
+            </setHeader>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setBody><constant></constant></setBody>
+            <to uri="http://localhost:8888/suspension-rest-test/suspension/${header.suspensionMaterial}"/>
+            <unmarshal ref="xmlJsonDataFormat"/>
             <setBody>
-                <constant>suspensionResult</constant>
+                <xpath resultType="java.lang.String">/o/suspension/material/type</xpath>
             </setBody>
             <log message="SUSPENSION ROUTE: OUT: ${body}" loggingLevel="INFO"/>
             <to uri="mock:suspensionResult"/>
@@ -45,8 +109,14 @@
         <route id="seatRoute">
             <from uri="seda:seatRoute"/>
             <log message="SEAT ROUTE: IN: ${body}" loggingLevel="INFO"/>
+            <to uri="xslt:transform/seat-transform.xslt"/>
+            <to uri="activemq:queue:foo"/>
+        </route>
+        
+        <route>
+            <from uri="activemq:foo?destination.consumer.exclusive=true&amp;destination.consumer.prefetchSize=50"/>
             <setBody>
-                <constant>seatResult</constant>
+                <xpath resultType="java.lang.String">/seatRequest/value</xpath>
             </setBody>
             <log message="SEAT ROUTE: OUT: ${body}" loggingLevel="INFO"/>
             <to uri="mock:seatResult"/>

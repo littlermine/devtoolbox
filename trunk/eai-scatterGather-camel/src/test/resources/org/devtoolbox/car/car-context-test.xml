@@ -8,6 +8,9 @@
 
     <import resource="classpath*:/META-INF/spring/car-route-context.xml"/>
     
-    <context:component-scan base-package="org.devtoolbox.car"/>
+    <context:component-scan base-package="org.devtoolbox.car,org.devtoolbox.suspension"/>
+    
+    <context:property-placeholder location="classpath:app.properties"/>
+    <bean name="restTemplate" class="org.springframework.web.client.RestTemplate"/>
     
 </beans>

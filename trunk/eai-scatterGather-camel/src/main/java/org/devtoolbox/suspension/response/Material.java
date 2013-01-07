@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 step@ <jk@stepat.nl>.
+ * Copyright 2013 step@ <jk@stepat.nl>.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.devtoolbox.seat.domain;
+package org.devtoolbox.suspension.response;
 
-public class Seat
+/**
+ * @author J. Kazakovs
+ * 
+ */
+public class Material
 	{
-	private String status;
+	private String type;
 
-	public String getStatus()
+	public String getType()
 		{
-		return status;
+		return type;
 		}
 
-	public void setStatus(String status)
+	public void setType(String type)
 		{
-		this.status = status;
+		this.type = type;
+		}
+
+	@Override public String toString()
+		{
+		return "Material [type=" + type + "]";
 		}
 	}

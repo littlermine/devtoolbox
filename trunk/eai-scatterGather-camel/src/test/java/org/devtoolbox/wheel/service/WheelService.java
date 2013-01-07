@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.devtoolbox.car.callback;
+package org.devtoolbox.wheel.service;
 
-import org.springframework.stereotype.Component;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 
-/**
- * @author J. Kazakovs
- *
- */
-@Component
-public class CallbackBean
+import org.devtoolbox.wheel.request.WheelRequest;
+import org.devtoolbox.wheel.response.WheelResponse;
+
+@WebService
+public class WheelService
 	{
-	private String result;
-	
-	public void proessResult(String body)
+	@WebMethod
+	public WheelResponse retrieveWheel( WheelRequest wheelRequest)
 		{
-		result = body;
-		System.out.println("RESULT: " + result);
-		}
+		WheelResponse result = new WheelResponse();
+		result.setQuantity("9");
 
-	public String getResult()
-		{
 		return result;
 		}
 	}
