@@ -21,7 +21,11 @@ import javax.jws.WebService;
 import org.devtoolbox.wheel.request.WheelRequest;
 import org.devtoolbox.wheel.response.WheelResponse;
 
-@WebService
+/**
+ * @author J. Kazakovs
+ * 
+ */
+@WebService @SuppressWarnings("restriction")
 public class WheelService
 	{
 	@WebMethod

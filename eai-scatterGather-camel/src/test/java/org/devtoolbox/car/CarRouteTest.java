@@ -17,16 +17,13 @@ package org.devtoolbox.car;
 
 import java.io.File;
 
-import javax.annotation.Resource;
 import javax.xml.ws.Endpoint;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.devtoolbox.car.callback.CallbackBean;
 import org.devtoolbox.car.request.Car;
-import org.devtoolbox.suspension.SuspensionClient;
 import org.devtoolbox.suspension.resource.SuspensionResource;
 import org.devtoolbox.suspension.response.Material;
 import org.devtoolbox.suspension.response.Suspension;
@@ -49,8 +46,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 
+/**
+ * @author J. Kazakovs
+ * 
+ */
 @RunWith(Arquillian.class) 
 @SpringClientConfiguration("org/devtoolbox/car/car-context-test.xml") 
+@SuppressWarnings("restriction")
 public class CarRouteTest
 	{
 	@Produce(uri = "direct:start")
@@ -67,12 +69,6 @@ public class CarRouteTest
 	
 	@EndpointInject(uri = "mock:result")
     protected MockEndpoint resultEndpoint;
-	
-	@Resource
-	private CallbackBean callBackbean;
-	
-	@Resource 
-	private SuspensionClient seatClient;
 
 	private Endpoint wheelEndpoint;
 	
