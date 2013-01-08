@@ -25,7 +25,7 @@ import org.devtoolbox.wheel.response.WheelResponse;
  * @author J. Kazakovs
  * 
  */
-@WebService @SuppressWarnings("restriction")
+@WebService
 public class WheelService
 	{
 	@WebMethod

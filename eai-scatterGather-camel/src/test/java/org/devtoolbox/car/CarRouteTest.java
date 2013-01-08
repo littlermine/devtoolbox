@@ -52,7 +52,6 @@ import org.springframework.test.annotation.DirtiesContext;
  */
 @RunWith(Arquillian.class) 
 @SpringClientConfiguration("org/devtoolbox/car/car-context-test.xml") 
-@SuppressWarnings("restriction")
 public class CarRouteTest
 	{
 	@Produce(uri = "direct:start")
